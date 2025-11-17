@@ -47,5 +47,7 @@ MonoBehaviour:
   parentReference:
     TypeName: 
   autoRun: 1
-  autoInjectGameObjects: []
+  autoInjectGameObjects:
+  - {fileID: 0}
   buildingsConfigProvider: {fileID: 11400000, guid: a05ba0d92ab53f546a852a10e727305f, type: 2}
+  buildMenuView: {fileID: 0}

@@ -426,6 +426,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1075916109 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 689952472946705158, guid: cbcdc28f2cc1aca429f3854517b7aa4e, type: 3}
+  m_PrefabInstance: {fileID: 6878433938403233648}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb05848336e4297bb4506dbc68176e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1399096611 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4920701295526957888, guid: dfc23953220344d4a8e3b3d83b23ccbe, type: 3}
@@ -439,10 +450,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3913387072303024916, guid: dfc23953220344d4a8e3b3d83b23ccbe, type: 3}
-      propertyPath: gridCellSize
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4841040983895444310, guid: dfc23953220344d4a8e3b3d83b23ccbe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -558,9 +565,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2251421755829419510, guid: 9445b7ec2b8ff1945bebfd6171e70c9f, type: 3}
-      propertyPath: autoInjectGameObjects.Array.size
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: buildMenuView
+      value: 
+      objectReference: {fileID: 1075916109}
     - target: {fileID: 2251421755829419510, guid: 9445b7ec2b8ff1945bebfd6171e70c9f, type: 3}
       propertyPath: 'autoInjectGameObjects.Array.data[0]'
       value: 
