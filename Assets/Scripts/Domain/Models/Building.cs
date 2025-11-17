@@ -6,7 +6,7 @@ namespace Domain
         public readonly BuildingType Type;
         public int Level;
 
-        public Building(BuildingType type)
+        public Building(BuildingType type, int level)
         {
             Type = type;
             Level = 0;
@@ -14,7 +14,7 @@ namespace Domain
 
         public int GetTickIncome()
         {
-            return this.Type.Levels[this.Level].IncomePerTick;
+            return Type.Levels[Level].IncomePerTick;
         }
     }
 }

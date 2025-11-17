@@ -442,6 +442,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4920701295526957888, guid: dfc23953220344d4a8e3b3d83b23ccbe, type: 3}
   m_PrefabInstance: {fileID: 5200185645855573414}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1399096612 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3913387072303024916, guid: dfc23953220344d4a8e3b3d83b23ccbe, type: 3}
+  m_PrefabInstance: {fileID: 5200185645855573414}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399096611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 448f20569acf4ae9b75517fdcaed4f59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5200185645855573414
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -564,6 +575,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2251421755829419510, guid: 9445b7ec2b8ff1945bebfd6171e70c9f, type: 3}
+      propertyPath: gridView
+      value: 
+      objectReference: {fileID: 1399096612}
     - target: {fileID: 2251421755829419510, guid: 9445b7ec2b8ff1945bebfd6171e70c9f, type: 3}
       propertyPath: buildMenuView
       value: 

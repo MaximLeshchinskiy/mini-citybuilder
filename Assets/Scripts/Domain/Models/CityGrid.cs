@@ -2,13 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace Domain
 {
     public class CityGrid 
     {
-        public int Width;
-        public int Height;
+        public readonly int Width;
+        public readonly int Height;
         public Dictionary<GridPos, Building> Buildings = new();
+
+        public CityGrid(int width, int height)
+        {
+            Width = width;
+            Height = height;
+        }
 
         public int GetTickIncome()
         {
@@ -25,7 +32,12 @@ namespace Domain
         
         public bool IsCellOccupied(GridPos pos)
         {
-            return this.Buildings.ContainsKey(pos);
+            return Buildings.ContainsKey(pos);
+        }
+
+        public Building GetBuildingInCell(GridPos gridPosition)
+        {
+            return Buildings.GetValueOrDefault(gridPosition);
         }
     }
 }

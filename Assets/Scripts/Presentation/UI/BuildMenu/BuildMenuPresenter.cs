@@ -30,7 +30,10 @@ namespace Presentation.UI.BuildMenu
             await buildMenuView.Init();
             foreach (var buildingType in placeBuildingUseCase.BuildingsAvailable)
             {
-                buildMenuView.AddButton(buildingType.Name).AddTo(_compositeDisposable);
+                buildMenuView.AddButton(buildingType.Item1.Name, buildingType.Item2).Subscribe(_ => 
+                {
+                    placeBuildingUseCase.CreateBuilding(buildingType);
+                }).AddTo(_compositeDisposable);
             }
         }
     }

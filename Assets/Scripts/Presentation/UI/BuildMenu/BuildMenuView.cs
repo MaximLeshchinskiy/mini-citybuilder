@@ -1,10 +1,12 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Presentation.UI.BuildMenu
 {
+    //todo deactivate buttons
     [RequireComponent(typeof(UIDocument))]
     public class BuildMenuView : MonoBehaviour, IBuildMenuView
     {
@@ -22,19 +24,19 @@ namespace Presentation.UI.BuildMenu
              _container = root.Q<VisualElement>("build-menu-container");
         }
 
-        public Subject<uint> AddButton(string text)
+        public Subject<uint> AddButton(string buildingTypeName, int level)
         {
             var instance = buttonTemplate.Instantiate();
-            
+
             var btn = instance.Q<Button>("BuildingButton");
 
-            btn.text = text;
+            btn.text = $"{buildingTypeName} L{level+1}";
             var subject = new Subject<uint>();
 
             btn.clicked += () => { subject.OnNext(0); };
             _container.Add(instance);
-            
-            return  subject;
+
+            return subject;
         }
     }
 }

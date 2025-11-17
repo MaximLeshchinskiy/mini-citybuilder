@@ -6,6 +6,6 @@ namespace Presentation.UI.BuildMenu
     public interface IBuildMenuView
     {
         UniTask Init(); 
-        Subject<uint> AddButton(string text);
+        Subject<uint> AddButton(string buildingTypeName, int level);
     }
 }

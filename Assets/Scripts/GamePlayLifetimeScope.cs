@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Application;
 using Domain;
+using Infrastructure;
 using Infrastructure.Gameplay;
 using Presentation;
 using Presentation.UI.BuildMenu;
@@ -15,8 +16,9 @@ namespace Tmp
         [Header("configs")]
         [SerializeField] private BuildingsConfigProvider buildingsConfigProvider;
         
-        [Header("UI")]
+        [Header("Views")]
         [SerializeField] private BuildMenuView buildMenuView;
+        [SerializeField] private GridView gridView;
          
         protected override void Configure(IContainerBuilder builder)
         {
@@ -28,10 +30,12 @@ namespace Tmp
             {
                 BuildingsAvailable = new List<(BuildingType, int)>()
                 {
-                    (buildingsConfigProvider.BuildingTypes[0], 1),
-                    (buildingsConfigProvider.BuildingTypes[1], 1),
-                    (buildingsConfigProvider.BuildingTypes[2], 1),
+                    (buildingsConfigProvider.BuildingTypes[0], 0),
+                    (buildingsConfigProvider.BuildingTypes[1], 0),
+                    (buildingsConfigProvider.BuildingTypes[2], 0),
                 }
+                ,
+                CityGrid = new CityGrid(5, 5)
             };
             builder.RegisterInstance(gameState);
             builder.RegisterInstance(buildingTypesProvider);
@@ -40,18 +44,28 @@ namespace Tmp
             
             
             BindUseCases(builder);
-            BindStaticUI(builder);
+            BindStaticViews(builder);
+            BindInfrastructure(builder);
+            
         }
 
-        private void BindStaticUI(IContainerBuilder builder)
+        private static void BindInfrastructure(IContainerBuilder builder)
+        {
+            builder.RegisterEntryPoint<DesktopInputService>().As<IInputService>();
+        }
+
+
+        private void BindStaticViews(IContainerBuilder builder)
         {
             builder.RegisterInstance(buildMenuView).As<IBuildMenuView>();
             builder.RegisterEntryPoint<BuildMenuPresenter>();
+            builder.RegisterEntryPoint<BuildingMovementController>();
+            builder.RegisterInstance(gridView).As<IGridPositionProvider>();
         }
 
         private static void BindUseCases(IContainerBuilder builder)
         {
-            builder.Register<IPlaceBuildingUseCase, PlaceBuildingUseCase>(Lifetime.Singleton);
+            builder.RegisterEntryPoint<PlaceBuildingUseCase>().As<IPlaceBuildingUseCase>();
             builder.Register<IInstantiateGridUseCase,InstantiateGridUseCase>(Lifetime.Singleton);
         }
     }
