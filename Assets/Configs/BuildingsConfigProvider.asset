@@ -13,4 +13,9 @@ MonoBehaviour:
   m_Name: BuildingsConfigProvider
   m_EditorClassIdentifier: 
   buildingViewPrefab:
+  - {fileID: 8083854782803815764, guid: 6ea56ab716bfe6d429a41da400a5a6d7, type: 3}
+  - {fileID: 8083854782803815764, guid: cbcb3a269d6eae545b2da16e747c3030, type: 3}
   - {fileID: 8083854782803815764, guid: 450c0e613b0a19e46bbbb328aad01ec7, type: 3}
+  - {fileID: 8083854782803815764, guid: 13baf9d8189e3134185305118534539c, type: 3}
+  - {fileID: 8083854782803815764, guid: fce7796f9c4cb2c4c8e99107121374d9, type: 3}
+  - {fileID: 8083854782803815764, guid: 3126937dd2a63cc42b33643c7aac031e, type: 3}

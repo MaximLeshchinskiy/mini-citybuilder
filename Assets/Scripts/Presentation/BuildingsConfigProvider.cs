@@ -25,18 +25,20 @@ namespace Presentation
 
         public void Initialize()
         {
-            var buildingsData = new Dictionary<BuildingTypeAndLevelData, Dictionary<int, BuildingLevel>>();
+            var buildingsData = new Dictionary<string, Dictionary<int, (BuildingLevel, BuildingView)>>();
             
             foreach (var buildingTypeAndLevelData in buildingViewPrefab)
             {
-                if (!buildingsData.TryGetValue(buildingTypeAndLevelData, out var buildingLevelsData))
+                if (!buildingsData.TryGetValue(buildingTypeAndLevelData.buildingName, out var buildingLevelsData))
                 {
-                    buildingLevelsData = new Dictionary<int, BuildingLevel>();
-                    buildingsData.Add(buildingTypeAndLevelData, buildingLevelsData);
+                    buildingLevelsData = new Dictionary<int, (BuildingLevel, BuildingView)>();
+                    buildingsData.Add(buildingTypeAndLevelData.buildingName, buildingLevelsData);
                 }
 
                 if (!buildingLevelsData.TryAdd(buildingTypeAndLevelData.level,
-                        new BuildingLevel(buildingTypeAndLevelData.cost, buildingTypeAndLevelData.incomePerTick)))
+                        (new BuildingLevel(buildingTypeAndLevelData.cost,
+                                buildingTypeAndLevelData.incomePerTick),
+                            buildingTypeAndLevelData.GetComponent<BuildingView>())))
                 {
                     Debug.LogError($"Building level {buildingTypeAndLevelData.level} already exists for building {buildingTypeAndLevelData.name}");
                 }
@@ -44,13 +46,13 @@ namespace Presentation
             
             foreach (var buildingTypeData in buildingsData)
             {
-                var levels = buildingTypeData.Value.Values.ToList();
-                var buildingType = new BuildingType(buildingTypeData.Key.buildingName, levels);
+                var levels = buildingTypeData.Value.Values.Select(it => it.Item1).ToList();
+                var buildingType = new BuildingType(buildingTypeData.Key, levels);
                 BuildingTypes.Add(buildingType);
-                var buildingView = buildingTypeData.Key.GetComponent<BuildingView>();
+                var buildingView = buildingTypeData.Value.Values.Select(it => it.Item2).ToList();
                 for (var index = 0; index < levels.Count; index++)
                 {
-                    _buildingViews.Add(new KeyValuePair<BuildingType, int>(buildingType, index), buildingView);
+                    _buildingViews.Add(new KeyValuePair<BuildingType, int>(buildingType, index), buildingView[index]);
                 }
             }
             
