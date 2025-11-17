@@ -1,4 +1,5 @@
-﻿using R3;
+﻿using Cysharp.Threading.Tasks;
+using R3;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,8 +12,12 @@ namespace Presentation.UI.BuildMenu
         [SerializeField] private UIDocument uiDocument;
         private VisualElement _container;
 
-        public void Init()
+        public async UniTask Init()
         {
+            while (!destroyCancellationToken.IsCancellationRequested && uiDocument.rootVisualElement == null)
+            {
+                await UniTask.Yield();
+            }
             var root = uiDocument.rootVisualElement;
              _container = root.Q<VisualElement>("build-menu-container");
         }

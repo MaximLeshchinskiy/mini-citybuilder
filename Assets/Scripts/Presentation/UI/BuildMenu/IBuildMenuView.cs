@@ -1,10 +1,11 @@
-﻿using R3;
+﻿using Cysharp.Threading.Tasks;
+using R3;
 
 namespace Presentation.UI.BuildMenu
 {
     public interface IBuildMenuView
     {
-        public void Init(); 
+        UniTask Init(); 
         Subject<uint> AddButton(string text);
     }
 }

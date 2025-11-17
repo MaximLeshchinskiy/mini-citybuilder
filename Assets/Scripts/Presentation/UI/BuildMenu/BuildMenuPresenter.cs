@@ -1,6 +1,8 @@
 ﻿using System;
 using Application;
+using Cysharp.Threading.Tasks;
 using R3;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -10,8 +12,8 @@ namespace Presentation.UI.BuildMenu
     {
         [Inject] private IPlaceBuildingUseCase placeBuildingUseCase;
         [Inject] private IBuildMenuView buildMenuView;
-        private CompositeDisposable _compositeDisposable;
-
+        
+        private readonly CompositeDisposable _compositeDisposable = new();
 
         public void Dispose()
         {
@@ -20,7 +22,12 @@ namespace Presentation.UI.BuildMenu
 
         public void Initialize()
         {
-            buildMenuView.Init();
+            InitializeView().Forget(Debug.LogError);
+        }
+        
+        private async UniTask InitializeView()
+        {
+            await buildMenuView.Init();
             foreach (var buildingType in placeBuildingUseCase.BuildingsAvailable)
             {
                 buildMenuView.AddButton(buildingType.Name).AddTo(_compositeDisposable);
