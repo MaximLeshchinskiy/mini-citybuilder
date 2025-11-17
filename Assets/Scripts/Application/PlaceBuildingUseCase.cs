@@ -42,7 +42,9 @@ namespace Application
                     var gridPosition = _gridPositionProvider.GetGridPosition(_inputService.MouseWorldPosition.Value);
                     if (gridPosition != null && _gameState.CityGrid.GetBuildingInCell(gridPosition.Value) == null)
                     {
+                        Debug.Log($"Place building at {gridPosition.Value} ");
                         _gameState.CityGrid.PlaceBuilding(BuildingMoved.Value, gridPosition.Value);
+                        BuildingMoved.Value = null;
                     }
                 }
             }).AddTo(_compositeDisposable);

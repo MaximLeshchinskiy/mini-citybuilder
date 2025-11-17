@@ -35,6 +35,7 @@ namespace Presentation
         {
             if (building == null)
             {
+                _buildingHandled = null;
                 return;
             }
             //todo move case 
