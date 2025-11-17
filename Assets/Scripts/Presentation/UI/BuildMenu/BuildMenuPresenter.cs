@@ -20,6 +20,7 @@ namespace Presentation.UI.BuildMenu
 
         public void Initialize()
         {
+            buildMenuView.Init();
             foreach (var buildingType in placeBuildingUseCase.BuildingsAvailable)
             {
                 buildMenuView.AddButton(buildingType.Name).AddTo(_compositeDisposable);

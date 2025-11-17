@@ -11,13 +11,14 @@ namespace Presentation.UI.BuildMenu
         [SerializeField] private UIDocument uiDocument;
         private VisualElement _container;
 
+        public void Init()
+        {
+            var root = uiDocument.rootVisualElement;
+             _container = root.Q<VisualElement>("build-menu-container");
+        }
+
         public Subject<uint> AddButton(string text)
         {
-            if (_container == null)
-            {
-                var root = uiDocument.rootVisualElement;
-                _container = root.Q<VisualElement>("build-menu-container");
-            }
             var instance = buttonTemplate.Instantiate();
             
             var btn = instance.Q<Button>("BuildingButton");
