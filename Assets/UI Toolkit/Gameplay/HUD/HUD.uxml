@@ -1,6 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement style="flex-grow: 1; top: initial;">
-        <ui:Label text="-10" name="Gold" style="-unity-font-style: bold; color: rgb(236, 117, 12); font-size: 30px; top: 0; left: 0%; right: 2px; bottom: 1024px; position: absolute;" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; top: initial;">
+        <ui:Label text="-10" name="gold-label" style="-unity-font-style: bold; color: rgb(236, 117, 12); font-size: 30px; top: 0; left: 0%; right: 2px; bottom: 1024px; position: absolute;" />
         <ui:VisualElement name="building-edit-menu" style="flex-grow: 1; top: 670px; position: absolute; left: 1700px; right: 6px; bottom: 140px;">
             <ui:Label text="-name" name="name-label" />
             <ui:Label text="-1" name="level-label" />

@@ -50,4 +50,8 @@ MonoBehaviour:
   autoInjectGameObjects:
   - {fileID: 0}
   buildingsConfigProvider: {fileID: 11400000, guid: a05ba0d92ab53f546a852a10e727305f, type: 2}
+  gameplaySettings: {fileID: 11400000, guid: c328c84d750b5d647987bbf83fc2d2db, type: 2}
   buildMenuView: {fileID: 0}
+  gridView: {fileID: 0}
+  buildingEditMenuView: {fileID: 0}
+  goldCounterView: {fileID: 0}

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b64dabc3e744dd96c7e658a10225f3, type: 3}
   m_Name: GameplaySettings
   m_EditorClassIdentifier: 
-  tickDurationInMilliseconds: 30000
+  tickDurationInMilliseconds: 10000
