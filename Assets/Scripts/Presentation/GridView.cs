@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Application;
 using Domain;
+using Infrastructure;
 using R3;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ using VContainer;
 
 namespace Presentation
 {
-    public class GridView : MonoBehaviour, IGridPositionProvider
+    public class GridView : MonoBehaviour
     {
         [SerializeField] private GridCellView gridCellViewPrefab;
         [SerializeField] private float gridCellSize;
@@ -17,6 +18,7 @@ namespace Presentation
         [Inject] private IInstantiateGridUseCase _instantiateGridUseCase;
         [Inject] private IPlaceBuildingUseCase _placeBuildingUseCase;
         [Inject] private IBuildingViewFactory _buildingViewFactory;
+        [Inject] private IInputService _inputService;
         
         private readonly Dictionary<GridPos, GridCellView> _gridCellViews = new();
         private readonly Dictionary<Building, BuildingView> _buildingViews = new();
@@ -30,19 +32,32 @@ namespace Presentation
         private void OnPostInject()
         {
             PopulateGrid();
-            _placeBuildingUseCase.BuildingMoved.Subscribe(HandleBuildingPlacement).AddTo(_compositeDisposable);
-            _placeBuildingUseCase.PlacingPosition.Subscribe(HandleBuildingMovement).AddTo(_compositeDisposable);
-            _placeBuildingUseCase.BuildingPlaced.Subscribe(OnPlaced).AddTo(_compositeDisposable);
-        }
 
-        private void OnPlaced((Building, GridPos) placed)
-        {
-            _buildingViews.TryAdd(placed.Item1, _buildingHandled);
-            _buildingHandled.transform.SetParent(_gridCellViews[placed.Item2].transform);
-            _buildingHandled.transform.localPosition = Vector3.zero;
+            _inputService.MouseLeftClick.Subscribe(TryCompleteBuildingPlacement).AddTo(_compositeDisposable);
+            _inputService.MouseWorldPosition.Subscribe(HandleBuildingMovement).AddTo(_compositeDisposable);
+            _placeBuildingUseCase.BuildingBeingMoved.Subscribe(HandleBuildingPlacementStart).AddTo(_compositeDisposable);
         }
         
 
+        private void TryCompleteBuildingPlacement(Unit _)
+        {
+            if (_buildingHandled == null)
+            {
+                return;
+            }
+            
+            var targetPosition = GetGridPosition(_inputService.MouseWorldPosition.Value);
+            if (targetPosition.HasValue && _placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value))
+            {
+                _buildingViews.TryAdd(_placeBuildingUseCase.BuildingBeingMoved.Value, _buildingHandled);
+                _buildingHandled.transform.SetParent(_cellHighlighted.transform);
+                _buildingHandled.transform.localPosition = Vector3.zero;
+                _buildingHandled.SetNormalMode();
+                _buildingHandled = null;
+                _placeBuildingUseCase.PlaceMovedBuilding(targetPosition.Value);
+            }
+        }
+        
         private void PopulateGrid()
         {
             for (var i = 0; i < _instantiateGridUseCase.Height; i++)
@@ -74,7 +89,7 @@ namespace Presentation
             _buildingHandled.transform.position = mouseWorldPosition;
             _cellHighlighted?.SetNormalMode();
             _cellHighlighted = null;
-            var targetPosition = GetGridPosition(_placeBuildingUseCase.PlacingPosition.Value);
+            var targetPosition = GetGridPosition(_inputService.MouseWorldPosition.Value);
             if (targetPosition.HasValue)
             {
                 _cellHighlighted = _gridCellViews[targetPosition.Value];
@@ -82,7 +97,7 @@ namespace Presentation
             }
         }
 
-        private void HandleBuildingPlacement(Building building)
+        private void HandleBuildingPlacementStart(Building building)
         {
             if (building == null)
             {
@@ -92,12 +107,12 @@ namespace Presentation
             }
             //todo move case 
             _buildingHandled = _buildingViewFactory.CreateBuildingView(building);
-            _buildingHandled.transform.position = _placeBuildingUseCase.PlacingPosition.Value;
+            _buildingHandled.transform.position = _inputService.MouseWorldPosition.Value;
             _buildingHandled.SetMovedMode();
             
         }
 
-        public GridPos? GetGridPosition(Vector3 worldPosition)
+        private GridPos? GetGridPosition(Vector3 worldPosition)
         {
             if (worldPosition.x < 0 || worldPosition.x > gridCellSize * _instantiateGridUseCase.Width || //todo can it be updated
                 worldPosition.z < 0 || worldPosition.z > gridCellSize * _instantiateGridUseCase.Height)

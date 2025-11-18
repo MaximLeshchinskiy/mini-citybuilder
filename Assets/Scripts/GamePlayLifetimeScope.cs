@@ -68,7 +68,6 @@ namespace Tmp
         {
             builder.RegisterInstance(buildMenuView).As<IBuildMenuView>();
             builder.RegisterEntryPoint<BuildMenuPresenter>();
-            builder.RegisterInstance(gridView).As<IGridPositionProvider>();
         }
 
         private static void BindUseCases(IContainerBuilder builder)

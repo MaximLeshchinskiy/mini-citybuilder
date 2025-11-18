@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Domain;
 using Infrastructure;
-using Presentation;
 using R3;
 using UnityEngine;
 using VContainer;
@@ -13,45 +12,28 @@ namespace Application
 {
     public class PlaceBuildingUseCase : IPlaceBuildingUseCase, IInitializable, IDisposable
     {
-        public ReactiveProperty<Vector3> PlacingPosition => _inputService.MouseWorldPosition;
+        
         public IEnumerable<(BuildingType, int)> BuildingsAvailable => _gameState.BuildingsAvailable.ToList();
-        public ReactiveProperty<Building> BuildingMoved { get; } = new();
-        public Subject<(Building, GridPos)> BuildingPlaced { get; } = new();
-
+        public ReactiveProperty<Building> BuildingBeingMoved { get; } = new();
+        
         [Inject] private GameState _gameState;
         [Inject] private IInputService _inputService;
-        [Inject] private IGridPositionProvider _gridPositionProvider;
         
         private readonly CompositeDisposable _compositeDisposable = new();
         private Building _handlingBuildingPlacement;
 
         public void CreateBuilding((BuildingType, int) buildingData)
         {
-            if (BuildingMoved.Value != null)
+            if (BuildingBeingMoved.Value != null)
             {
                 return;
             }
-            BuildingMoved.Value = new Building(buildingData.Item1, buildingData.Item2);
+            BuildingBeingMoved.Value = new Building(buildingData.Item1, buildingData.Item2);
         }
-
         
-
         public void Initialize()
         {
-            _inputService.MouseLeftClick.Subscribe(_ =>
-            {
-                if (BuildingMoved.Value != null)
-                {
-                    var gridPosition = _gridPositionProvider.GetGridPosition(_inputService.MouseWorldPosition.Value);
-                    if (gridPosition != null && _gameState.CityGrid.GetBuildingInCell(gridPosition.Value) == null)
-                    {
-                        Debug.Log($"Place building at {gridPosition.Value} ");
-                        _gameState.CityGrid.PlaceBuilding(BuildingMoved.Value, gridPosition.Value);
-                        BuildingPlaced.OnNext((BuildingMoved.Value, gridPosition.Value));
-                        BuildingMoved.Value = null;
-                    }
-                }
-            }).AddTo(_compositeDisposable);
+            //todo remove if empty
         }
 
         public void Dispose()
@@ -62,6 +44,13 @@ namespace Application
         public bool CanPlaceBuilding(GridPos targetPosition)
         {
             return _gameState.CityGrid.GetBuildingInCell(targetPosition) == null;
+        }
+
+        public void PlaceMovedBuilding(GridPos position)
+        {
+            Debug.Log($"Place building at {position} ");
+            _gameState.CityGrid.PlaceBuilding(BuildingBeingMoved.Value, position);
+            BuildingBeingMoved.Value = null;
         }
     }
 }
