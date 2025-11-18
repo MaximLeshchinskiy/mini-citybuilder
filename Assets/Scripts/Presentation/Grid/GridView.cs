@@ -40,9 +40,18 @@ namespace Presentation.Grid
             _inputService.MouseWorldPosition.Subscribe(HandleBuildingMovement).AddTo(_compositeDisposable);
             _placeBuildingUseCase.BuildingBeingMoved.Subscribe(HandleBuildingPlacementStart).AddTo(_compositeDisposable);
             _editBuildingUseCase.BuildingDestroyed.Subscribe(HandleBuildingDestroy).AddTo(_compositeDisposable);
-
+            _editBuildingUseCase.BuildingUpgraded.Subscribe(HandleBuildingUpgrade).AddTo(_compositeDisposable);
         }
-
+        
+        private void HandleBuildingUpgrade(Building building)
+        {
+            var buildingView = _buildingViews[building];
+            buildingView.PlayUpgradeFx();
+            _buildingViews.Remove(building);
+            Destroy(buildingView.gameObject);
+            CreateBuildingAtCell(building, _cellHandled);
+        }
+        
         private void HandleBuildingDestroy(Building building)
         {
             var buildingView = _buildingViews[building];
@@ -72,7 +81,6 @@ namespace Presentation.Grid
                 return;
             }
             
-            
             if (_placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value))
             {
                 _buildingViews.TryAdd(_placeBuildingUseCase.BuildingBeingMoved.Value, _buildingViewHandled);
@@ -96,15 +104,20 @@ namespace Presentation.Grid
                     var building = _instantiateGridUseCase.GetBuildingAtCell(i, j);
                     if (building != null)
                     {
-                        var buildingView = _buildingViewFactory.CreateBuildingView(building);
-                        _buildingViews.Add(building, buildingView);
-                        buildingView.transform.SetParent(cellView.transform);
-                        buildingView.transform.localPosition = cellView.transform.position;
+                        CreateBuildingAtCell(building, cellView);
                     }
                 }
             }
         }
-        
+
+        private void CreateBuildingAtCell(Building building, GridCellView cellView)
+        {
+            var buildingView = _buildingViewFactory.CreateBuildingView(building);
+            _buildingViews.Add(building, buildingView);
+            buildingView.transform.SetParent(cellView.transform);
+            buildingView.transform.localPosition = Vector3.zero;
+        }
+
         private void HandleBuildingMovement(Vector3 mouseWorldPosition)
         {
             if (!_buildingViewHandled)

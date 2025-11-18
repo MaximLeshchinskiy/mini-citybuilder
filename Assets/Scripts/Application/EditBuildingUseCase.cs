@@ -9,6 +9,7 @@ namespace Application
         [Inject] private GameState _gameState;
 
         public Subject<Building> BuildingDestroyed { get; } = new();
+        public Subject<Building> BuildingUpgraded { get; } = new();
 
         public Building GetBuildingAtPos(GridPos pos)
         {
@@ -26,6 +27,7 @@ namespace Application
         {
             var building = _gameState.CityGrid.GetBuildingInCell(gridPosHandled);
             building.Level++;
+            BuildingUpgraded.OnNext(building);
         }
 
         public bool CanUpgradeBuildingAtPosition(GridPos gridPosHandled)

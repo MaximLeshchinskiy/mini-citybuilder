@@ -27,6 +27,11 @@ namespace Presentation
         {
             Debug.Log("Boom!");
         }
+
+        public void PlayUpgradeFx()
+        {
+            Debug.Log("Poof!!!");
+        }
     }
     
 }
