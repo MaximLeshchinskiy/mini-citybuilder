@@ -12,5 +12,6 @@ namespace Application
         IEnumerable<(BuildingType, int)> BuildingsAvailable { get; }
         public ReactiveProperty<Building> BuildingMoved { get; }
         public void CreateBuilding((BuildingType, int) buildingData);
+        public Subject<(Building, GridPos)> BuildingPlaced { get; }
     }
 }

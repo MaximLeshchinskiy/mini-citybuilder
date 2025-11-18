@@ -13,13 +13,14 @@ namespace Application
 {
     public class PlaceBuildingUseCase : IPlaceBuildingUseCase, IInitializable, IDisposable
     {
-        [Inject] private GameState _gameState;
-        [Inject] private IInputService _inputService;
-        [Inject] private IGridPositionProvider _gridPositionProvider;
-
         public ReactiveProperty<Vector3> PlacingPosition => _inputService.MouseWorldPosition;
         public IEnumerable<(BuildingType, int)> BuildingsAvailable => _gameState.BuildingsAvailable.ToList();
         public ReactiveProperty<Building> BuildingMoved { get; } = new();
+        public Subject<(Building, GridPos)> BuildingPlaced { get; } = new();
+        
+        [Inject] private GameState _gameState;
+        [Inject] private IInputService _inputService;
+        [Inject] private IGridPositionProvider _gridPositionProvider;
         
         private readonly CompositeDisposable _compositeDisposable = new();
         private Building _handlingBuildingPlacement;
@@ -33,6 +34,8 @@ namespace Application
             BuildingMoved.Value = new Building(buildingData.Item1, buildingData.Item2);
         }
 
+        
+
         public void Initialize()
         {
             _inputService.MouseLeftClick.Subscribe(_ =>
@@ -44,6 +47,7 @@ namespace Application
                     {
                         Debug.Log($"Place building at {gridPosition.Value} ");
                         _gameState.CityGrid.PlaceBuilding(BuildingMoved.Value, gridPosition.Value);
+                        BuildingPlaced.OnNext((BuildingMoved.Value, gridPosition.Value));
                         BuildingMoved.Value = null;
                     }
                 }

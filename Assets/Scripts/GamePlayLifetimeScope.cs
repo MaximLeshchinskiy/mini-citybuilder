@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using Application;
+using Cysharp.Threading.Tasks;
 using Domain;
 using Infrastructure;
 using Infrastructure.Gameplay;
+using MessagePipe;
 using Presentation;
 using Presentation.UI.BuildMenu;
 using UnityEngine;
@@ -46,6 +48,13 @@ namespace Tmp
             BindUseCases(builder);
             BindStaticViews(builder);
             BindInfrastructure(builder);
+            RegisterMessages(builder);
+            var a = this.GetCancellationTokenOnDestroy();
+        }
+
+        private static void RegisterMessages(IContainerBuilder builder)
+        {
+            var options = builder.RegisterMessagePipe();
             
         }
 
@@ -59,7 +68,6 @@ namespace Tmp
         {
             builder.RegisterInstance(buildMenuView).As<IBuildMenuView>();
             builder.RegisterEntryPoint<BuildMenuPresenter>();
-            builder.RegisterEntryPoint<BuildingMovementController>();
             builder.RegisterInstance(gridView).As<IGridPositionProvider>();
         }
 
