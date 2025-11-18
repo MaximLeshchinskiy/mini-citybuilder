@@ -10,6 +10,7 @@ namespace Domain
         public readonly int Width;
         public readonly int Height;
         public Dictionary<GridPos, Building> Buildings = new();
+        
 
         public CityGrid(int width, int height)
         {
@@ -24,15 +25,19 @@ namespace Domain
         
         public void PlaceBuilding(Building building, GridPos pos)
         {
+            foreach (var buildingInDictionary in Buildings)
+            {
+                if (buildingInDictionary.Value == building)
+                {
+                    Buildings.Remove(buildingInDictionary.Key);
+                    break;
+                }
+            }
+
             if (!this.Buildings.TryAdd(pos, building))
             {
                 throw new Exception("Building already exists at position " + pos);
             }
-        }
-        
-        public bool IsCellOccupied(GridPos pos)
-        {
-            return Buildings.ContainsKey(pos);
         }
 
         public Building GetBuildingInCell(GridPos gridPosition)

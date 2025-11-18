@@ -2,7 +2,7 @@
 
 namespace Domain
 {
-    public class GameState
+    public class GameState //todo interfaces 
     {
         public int Gold;
         public CityGrid CityGrid;

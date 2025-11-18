@@ -9,9 +9,10 @@ namespace Presentation.UI.Lib
 {
     public abstract class APresenter<T> : IInitializable, IDisposable where T : IView
     {
-        [Inject] private T view;
+        [Inject] private T _view;
         private readonly CompositeDisposable _compositeDisposable = new();
         
+        protected T View => _view;
         protected CompositeDisposable CompositeDisposable => _compositeDisposable;
 
         public void Initialize()
@@ -21,7 +22,7 @@ namespace Presentation.UI.Lib
         
         private async UniTask InitializeView()
         {
-            await view.Init();
+            await _view.Init();
             await AfterInitializedAsync();
             AfterInitialized();
         }

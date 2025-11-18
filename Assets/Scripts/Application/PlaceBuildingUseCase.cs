@@ -28,9 +28,14 @@ namespace Application
             {
                 return;
             }
-            BuildingBeingMoved.Value = new Building(buildingData.Item1, buildingData.Item2);
+            StartBuildingMovement(new Building(buildingData.Item1, buildingData.Item2));
         }
-        
+
+        public void StartBuildingMovement(Building building)
+        {
+            BuildingBeingMoved.Value = building;
+        }
+
         public void Initialize()
         {
             //todo remove if empty

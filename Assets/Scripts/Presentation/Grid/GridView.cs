@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Application;
 using Domain;
 using Infrastructure;
+using MessagePipe;
 using R3;
 using UnityEngine;
 
 using VContainer;
 
-namespace Presentation
+namespace Presentation.Grid
 {
     public class GridView : MonoBehaviour
     {
@@ -19,41 +20,52 @@ namespace Presentation
         [Inject] private IPlaceBuildingUseCase _placeBuildingUseCase;
         [Inject] private IBuildingViewFactory _buildingViewFactory;
         [Inject] private IInputService _inputService;
+        [Inject] private IPublisher<GridPosSelected> _gridPosSelected;
         
         private readonly Dictionary<GridPos, GridCellView> _gridCellViews = new();
         private readonly Dictionary<Building, BuildingView> _buildingViews = new();
         private readonly CompositeDisposable _compositeDisposable = new();
       
-        private BuildingView _buildingHandled;
+        private BuildingView _buildingViewHandled;
         private GridPos _buildingHandledGridPos;
-        private GridCellView _cellHighlighted;
+        private GridCellView _cellHandled;
         
         [Inject]
         private void OnPostInject()
         {
             PopulateGrid();
 
-            _inputService.MouseLeftClick.Subscribe(TryCompleteBuildingPlacement).AddTo(_compositeDisposable);
+            _inputService.MouseLeftClick.Subscribe(HandleCellClick).AddTo(_compositeDisposable);
             _inputService.MouseWorldPosition.Subscribe(HandleBuildingMovement).AddTo(_compositeDisposable);
             _placeBuildingUseCase.BuildingBeingMoved.Subscribe(HandleBuildingPlacementStart).AddTo(_compositeDisposable);
         }
         
 
-        private void TryCompleteBuildingPlacement(Unit _)
+        private void HandleCellClick(Unit _)
         {
-            if (_buildingHandled == null)
+            var targetPosition = GetGridPosition(_inputService.MouseWorldPosition.Value);
+            if (!targetPosition.HasValue)
             {
                 return;
             }
             
-            var targetPosition = GetGridPosition(_inputService.MouseWorldPosition.Value);
-            if (targetPosition.HasValue && _placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value))
+            if (_buildingViewHandled == null)
             {
-                _buildingViews.TryAdd(_placeBuildingUseCase.BuildingBeingMoved.Value, _buildingHandled);
-                _buildingHandled.transform.SetParent(_cellHighlighted.transform);
-                _buildingHandled.transform.localPosition = Vector3.zero;
-                _buildingHandled.SetNormalMode();
-                _buildingHandled = null;
+                _cellHandled?.SetNormalMode();
+                _cellHandled = _gridCellViews[targetPosition.Value];
+                _cellHandled.SetSelected();
+                _gridPosSelected.Publish(new GridPosSelected(targetPosition.Value));
+                return;
+            }
+            
+            
+            if (_placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value))
+            {
+                _buildingViews.TryAdd(_placeBuildingUseCase.BuildingBeingMoved.Value, _buildingViewHandled);
+                _buildingViewHandled.transform.SetParent(_cellHandled.transform);
+                _buildingViewHandled.transform.localPosition = Vector3.zero;
+                _buildingViewHandled.SetNormalMode();
+                _buildingViewHandled = null;
                 _placeBuildingUseCase.PlaceMovedBuilding(targetPosition.Value);
             }
         }
@@ -81,19 +93,19 @@ namespace Presentation
         
         private void HandleBuildingMovement(Vector3 mouseWorldPosition)
         {
-            if (!_buildingHandled)
+            if (!_buildingViewHandled)
             {
                 return;
             }
             
-            _buildingHandled.transform.position = mouseWorldPosition;
-            _cellHighlighted?.SetNormalMode();
-            _cellHighlighted = null;
+            _buildingViewHandled.transform.position = mouseWorldPosition;
+            _cellHandled?.SetNormalMode();
+            _cellHandled = null;
             var targetPosition = GetGridPosition(_inputService.MouseWorldPosition.Value);
             if (targetPosition.HasValue)
             {
-                _cellHighlighted = _gridCellViews[targetPosition.Value];
-                _cellHighlighted.SetHighlightMode(_placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value));
+                _cellHandled = _gridCellViews[targetPosition.Value];
+                _cellHandled.SetHighlightMode(_placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value));
             }
         }
 
@@ -101,14 +113,15 @@ namespace Presentation
         {
             if (building == null)
             {
-                _buildingHandled?.SetNormalMode();
-                _buildingHandled = null;
+                _buildingViewHandled?.SetNormalMode();
+                _buildingViewHandled = null;
                 return;
             }
-            //todo move case 
-            _buildingHandled = _buildingViewFactory.CreateBuildingView(building);
-            _buildingHandled.transform.position = _inputService.MouseWorldPosition.Value;
-            _buildingHandled.SetMovedMode();
+            _buildingViewHandled = _buildingViews.TryGetValue(building, out var view)
+                ? view
+                : _buildingViewFactory.CreateBuildingView(building);
+            _buildingViewHandled.transform.position = _inputService.MouseWorldPosition.Value;
+            _buildingViewHandled.SetMovedMode();
             
         }
 
