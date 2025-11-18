@@ -21,6 +21,7 @@ namespace Presentation.Grid
         [Inject] private IBuildingViewFactory _buildingViewFactory;
         [Inject] private IInputService _inputService;
         [Inject] private IPublisher<GridPosSelected> _gridPosSelected;
+        [Inject] private IEditBuildingUseCase _editBuildingUseCase;
         
         private readonly Dictionary<GridPos, GridCellView> _gridCellViews = new();
         private readonly Dictionary<Building, BuildingView> _buildingViews = new();
@@ -38,6 +39,19 @@ namespace Presentation.Grid
             _inputService.MouseLeftClick.Subscribe(HandleCellClick).AddTo(_compositeDisposable);
             _inputService.MouseWorldPosition.Subscribe(HandleBuildingMovement).AddTo(_compositeDisposable);
             _placeBuildingUseCase.BuildingBeingMoved.Subscribe(HandleBuildingPlacementStart).AddTo(_compositeDisposable);
+            _editBuildingUseCase.BuildingDestroyed.Subscribe(HandleBuildingDestroy).AddTo(_compositeDisposable);
+
+        }
+
+        private void HandleBuildingDestroy(Building building)
+        {
+            var buildingView = _buildingViews[building];
+            buildingView.PlayDestroyFx();
+            _buildingViews.Remove(building);
+            Destroy(buildingView.gameObject);
+            _buildingViewHandled = null;
+            _cellHandled?.SetNormalMode();
+            _cellHandled = null;
         }
         
 

@@ -7,6 +7,7 @@ namespace Presentation.UI.BuildingEditMenu
     {
         Subject<Unit> MoveButtonClicked { get; }
         Subject<Unit> UpgradeButtonClicked { get; }
+        Subject<Unit> DestroyButtonClicked { get; }
         void Hide();
         void Show();
     }

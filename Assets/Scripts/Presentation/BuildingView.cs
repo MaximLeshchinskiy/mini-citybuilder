@@ -22,6 +22,11 @@ namespace Presentation
         {
             buildingObject.transform.position -= Vector3.up * beingMovedOffset;
         }
+
+        public void PlayDestroyFx()
+        {
+            Debug.Log("Boom!");
+        }
     }
     
 }

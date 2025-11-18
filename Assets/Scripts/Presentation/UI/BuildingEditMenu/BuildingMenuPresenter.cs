@@ -26,6 +26,11 @@ namespace Presentation.UI.BuildingEditMenu
                 _placeBuildingUseCase.StartBuildingMovement(_editBuildingUseCase.GetBuildingAtPos(_gridPosHandled));
                 View.Hide();
             }).AddTo(CompositeDisposable);
+            View.DestroyButtonClicked.Subscribe(_ =>
+            {
+                _editBuildingUseCase.DestroyBuildingAtPosition(_gridPosHandled);
+                View.Hide();
+            }).AddTo(CompositeDisposable);
             
 
         }

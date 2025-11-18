@@ -9,7 +9,9 @@ namespace Presentation.UI.BuildingEditMenu
     {
         public Subject<Unit> MoveButtonClicked { get; } = new();
         public Subject<Unit> UpgradeButtonClicked { get; } = new();
-        
+        public Subject<Unit> DestroyButtonClicked { get; } = new();
+    
+
         private VisualElement _container;
         private StyleEnum<DisplayStyle> _initialDisplayStyle;
 
@@ -20,6 +22,7 @@ namespace Presentation.UI.BuildingEditMenu
             _initialDisplayStyle = _container.style.display;
             _container.Q<Button>("move-button").clicked += () => MoveButtonClicked.OnNext(Unit.Default);
             _container.Q<Button>("upgrade-button").clicked += () => UpgradeButtonClicked.OnNext(Unit.Default);
+            _container.Q<Button>("destroy-button").clicked += () => DestroyButtonClicked.OnNext(Unit.Default);
         }
 
         public void Hide()
