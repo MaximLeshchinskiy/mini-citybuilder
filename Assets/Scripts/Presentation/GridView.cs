@@ -119,8 +119,8 @@ namespace Presentation
             {
                 return null;
             }
-            var x = (int)(worldPosition.x / gridCellSize);
-            var z = (int)(worldPosition.z / gridCellSize);
+            var z = (int)(worldPosition.x / gridCellSize);
+            var x = (int)(worldPosition.z / gridCellSize);
             return new GridPos(x, z);
         }
         
