@@ -13,5 +13,6 @@ namespace Application
         public ReactiveProperty<Building> BuildingMoved { get; }
         public void CreateBuilding((BuildingType, int) buildingData);
         public Subject<(Building, GridPos)> BuildingPlaced { get; }
+        bool CanPlaceBuilding(GridPos targetPosition);
     }
 }

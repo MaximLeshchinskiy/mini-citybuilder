@@ -23,8 +23,8 @@ namespace Presentation
         private readonly CompositeDisposable _compositeDisposable = new();
       
         private BuildingView _buildingHandled;
-
-        
+        private GridPos _buildingHandledGridPos;
+        private GridCellView _cellHighlighted;
         
         [Inject]
         private void OnPostInject()
@@ -70,19 +70,31 @@ namespace Presentation
             {
                 return;
             }
+            
             _buildingHandled.transform.position = mouseWorldPosition;
+            _cellHighlighted?.SetNormalMode();
+            _cellHighlighted = null;
+            var targetPosition = GetGridPosition(_placeBuildingUseCase.PlacingPosition.Value);
+            if (targetPosition.HasValue)
+            {
+                _cellHighlighted = _gridCellViews[targetPosition.Value];
+                _cellHighlighted.SetHighlightMode(_placeBuildingUseCase.CanPlaceBuilding(targetPosition.Value));
+            }
         }
 
         private void HandleBuildingPlacement(Building building)
         {
             if (building == null)
             {
+                _buildingHandled?.SetNormalMode();
                 _buildingHandled = null;
                 return;
             }
             //todo move case 
             _buildingHandled = _buildingViewFactory.CreateBuildingView(building);
             _buildingHandled.transform.position = _placeBuildingUseCase.PlacingPosition.Value;
+            _buildingHandled.SetMovedMode();
+            
         }
 
         public GridPos? GetGridPosition(Vector3 worldPosition)

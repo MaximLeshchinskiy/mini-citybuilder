@@ -17,7 +17,7 @@ namespace Application
         public IEnumerable<(BuildingType, int)> BuildingsAvailable => _gameState.BuildingsAvailable.ToList();
         public ReactiveProperty<Building> BuildingMoved { get; } = new();
         public Subject<(Building, GridPos)> BuildingPlaced { get; } = new();
-        
+
         [Inject] private GameState _gameState;
         [Inject] private IInputService _inputService;
         [Inject] private IGridPositionProvider _gridPositionProvider;
@@ -57,6 +57,11 @@ namespace Application
         public void Dispose()
         {
             _compositeDisposable.Dispose();
+        }
+        
+        public bool CanPlaceBuilding(GridPos targetPosition)
+        {
+            return _gameState.CityGrid.GetBuildingInCell(targetPosition) == null;
         }
     }
 }
