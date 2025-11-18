@@ -1,5 +1,5 @@
 ﻿using System;
-using Cysharp.Threading.Tasks;
+using Presentation.UI.Lib;
 using R3;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,20 +8,16 @@ namespace Presentation.UI.BuildMenu
 {
     //todo deactivate buttons
     [RequireComponent(typeof(UIDocument))]
-    public class BuildMenuView : MonoBehaviour, IBuildMenuView
+    public class BuildMenuView : AView, IBuildMenuView
     {
         [SerializeField] private VisualTreeAsset buttonTemplate;
-        [SerializeField] private UIDocument uiDocument;
+        
         private VisualElement _container;
+        
 
-        public async UniTask Init()
+        protected override void AfterInit()
         {
-            while (!destroyCancellationToken.IsCancellationRequested && uiDocument.rootVisualElement == null)
-            {
-                await UniTask.Yield();
-            }
-            var root = uiDocument.rootVisualElement;
-             _container = root.Q<VisualElement>("build-menu-container");
+            _container = DocumentRoot.Q<VisualElement>("build-menu-container");
         }
 
         public Subject<uint> AddButton(string buildingTypeName, int level)

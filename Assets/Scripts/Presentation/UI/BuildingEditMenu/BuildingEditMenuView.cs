@@ -1,7 +1,18 @@
-﻿namespace Presentation.UI.BuildingEditMenu
+﻿using Cysharp.Threading.Tasks;
+using Presentation.UI.Lib;
+
+namespace Presentation.UI.BuildingEditMenu
 {
-    public class BuildingEditMenuView
+    public interface IBuildMenuView : IView
     {
         
+    }
+    
+    public class BuildingEditMenuView : IBuildMenuView
+    {
+        public UniTask Init()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
