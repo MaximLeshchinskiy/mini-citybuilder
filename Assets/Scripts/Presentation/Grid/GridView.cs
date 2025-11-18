@@ -132,8 +132,8 @@ namespace Presentation.Grid
             {
                 return null;
             }
-            var z = (int)(worldPosition.x / gridCellSize);
-            var x = (int)(worldPosition.z / gridCellSize);
+            var z = (int)(worldPosition.x / gridCellSize + gridCellSize/2f);
+            var x = (int)(worldPosition.z / gridCellSize + gridCellSize/2f);
             return new GridPos(x, z);
         }
         
