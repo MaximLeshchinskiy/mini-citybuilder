@@ -24,7 +24,9 @@ namespace Presentation.UI.BuildingEditMenu
             View.MoveButtonClicked.Subscribe(_ =>
             {
                 _placeBuildingUseCase.StartBuildingMovement(_editBuildingUseCase.GetBuildingAtPos(_gridPosHandled));
+                View.Hide();
             }).AddTo(CompositeDisposable);
+            
 
         }
         
