@@ -16,6 +16,9 @@ namespace Presentation.UI.BuildingEditMenu
         [Inject] IPlaceBuildingUseCase _placeBuildingUseCase;
 
         private GridPos _gridPosHandled;
+        private readonly ReactiveProperty<int> _buildingLevel = new();
+        private readonly ReactiveProperty<string> _buildingName = new();
+        private readonly ReactiveProperty<bool> _canUpgrade = new();
         
         protected override void AfterInitialized()
         {
@@ -31,7 +34,15 @@ namespace Presentation.UI.BuildingEditMenu
                 _editBuildingUseCase.DestroyBuildingAtPosition(_gridPosHandled);
                 View.Hide();
             }).AddTo(CompositeDisposable);
-            
+            View.UpgradeButtonClicked.Subscribe(_ =>
+            {
+                _editBuildingUseCase.UpgradeBuildingAtPosition(_gridPosHandled);
+                _canUpgrade.Value = _editBuildingUseCase.CanUpgradeBuildingAtPosition(_gridPosHandled);
+                _buildingLevel.Value++;
+            }).AddTo(CompositeDisposable);
+            View.BindBuildingLevel(_buildingLevel);
+            View.BindBuildingName(_buildingName);
+            View.BindUpgradeButton(_canUpgrade);
 
         }
         
@@ -44,6 +55,10 @@ namespace Presentation.UI.BuildingEditMenu
             else
             {
                 _gridPosHandled = gridPosSelected.GridPos;
+                var building = _editBuildingUseCase.GetBuildingAtPos(_gridPosHandled);
+                _canUpgrade.Value = _editBuildingUseCase.CanUpgradeBuildingAtPosition(_gridPosHandled);
+                _buildingLevel.Value = building.Level;
+                _buildingName.Value = building.Type.Name;
                 View.Show();
             }
         }

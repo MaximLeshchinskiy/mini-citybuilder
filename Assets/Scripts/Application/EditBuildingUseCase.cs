@@ -14,12 +14,24 @@ namespace Application
         {
             return _gameState.CityGrid.GetBuildingInCell(pos);
         }
-
+        
         public void DestroyBuildingAtPosition(GridPos gridPosHandled)
         {
             var building = _gameState.CityGrid.GetBuildingInCell(gridPosHandled);
             _gameState.CityGrid.Buildings.Remove(gridPosHandled);
             BuildingDestroyed.OnNext(building);
+        }
+
+        public void UpgradeBuildingAtPosition(GridPos gridPosHandled)
+        {
+            var building = _gameState.CityGrid.GetBuildingInCell(gridPosHandled);
+            building.Level++;
+        }
+
+        public bool CanUpgradeBuildingAtPosition(GridPos gridPosHandled)
+        {
+            var building = _gameState.CityGrid.GetBuildingInCell(gridPosHandled);
+            return building.Level < building.Type.Levels.Count - 1;
         }
     }
 }

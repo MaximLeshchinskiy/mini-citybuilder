@@ -10,5 +10,8 @@ namespace Presentation.UI.BuildingEditMenu
         Subject<Unit> DestroyButtonClicked { get; }
         void Hide();
         void Show();
+        void BindBuildingLevel(ReactiveProperty<int> level);
+        void BindBuildingName(ReactiveProperty<string> buildingName);
+        void BindUpgradeButton(ReactiveProperty<bool> canUpgrade);
     }
 }

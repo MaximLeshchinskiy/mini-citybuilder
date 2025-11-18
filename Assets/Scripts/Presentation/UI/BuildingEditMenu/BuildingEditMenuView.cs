@@ -34,5 +34,28 @@ namespace Presentation.UI.BuildingEditMenu
         {
             _container.style.display = _initialDisplayStyle;
         }
+
+        public void SetBuildingName(string buildingName)
+        {
+            _container.Q<Label>("building-name").text = buildingName;
+        }
+
+        public void BindBuildingLevel(ReactiveProperty<int> level)
+        {
+            level.Subscribe(l => { _container.Q<Label>("level-label").text = (level.Value + 1).ToString(); })
+                .AddTo(destroyCancellationToken);
+        }
+
+        public void BindBuildingName(ReactiveProperty<string> buildingName)
+        {
+            buildingName.Subscribe(n => { _container.Q<Label>("name-label").text = n; })
+                .AddTo(destroyCancellationToken);
+        }
+
+        public void BindUpgradeButton(ReactiveProperty<bool> canUpgrade)
+        {
+            canUpgrade.Subscribe(c => { _container.Q<Button>("upgrade-button").SetEnabled(c); })
+                .AddTo(destroyCancellationToken);
+        }
     }
 }

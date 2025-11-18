@@ -2,6 +2,8 @@
     <ui:VisualElement style="flex-grow: 1; top: initial;">
         <ui:Label text="-10" name="Gold" style="-unity-font-style: bold; color: rgb(236, 117, 12); font-size: 30px; top: 0; left: 0%; right: 2px; bottom: 1024px; position: absolute;" />
         <ui:VisualElement name="building-edit-menu" style="flex-grow: 1; top: 670px; position: absolute; left: 1700px; right: 6px; bottom: 140px;">
+            <ui:Label text="-name" name="name-label" />
+            <ui:Label text="-1" name="level-label" />
             <ui:Button text="Move" name="move-button" />
             <ui:Button text="Upgrade" name="upgrade-button" />
             <ui:Button text="Destroy" name="destroy-button" />

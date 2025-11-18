@@ -8,5 +8,7 @@ namespace Application
         Subject<Building> BuildingDestroyed { get; }
         Building GetBuildingAtPos(GridPos pos);
         void DestroyBuildingAtPosition(GridPos gridPosHandled);
+        void UpgradeBuildingAtPosition(GridPos gridPosHandled);
+        bool CanUpgradeBuildingAtPosition(GridPos gridPosHandled);
     }
 }
