@@ -1,39 +1,25 @@
-﻿using System;
-using Application;
+﻿using Application;
 using Cysharp.Threading.Tasks;
+using Presentation.UI.Lib;
 using R3;
-using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 
 namespace Presentation.UI.BuildMenu
 {
-    public class BuildMenuPresenter : IDisposable, IInitializable
+    public class BuildMenuPresenter : APresenter<IBuildMenuView>
     {
         [Inject] private IPlaceBuildingUseCase placeBuildingUseCase;
         [Inject] private IBuildMenuView buildMenuView;
-        
-        private readonly CompositeDisposable _compositeDisposable = new();
 
-        public void Dispose()
-        {
-            _compositeDisposable.Dispose();
-        }
 
-        public void Initialize()
+        protected override void AfterInitialized()
         {
-            InitializeView().Forget(Debug.LogError);
-        }
-        
-        private async UniTask InitializeView()
-        {
-            await buildMenuView.Init();
             foreach (var buildingType in placeBuildingUseCase.BuildingsAvailable)
             {
                 buildMenuView.AddButton(buildingType.Item1.Name, buildingType.Item2).Subscribe(_ => 
                 {
                     placeBuildingUseCase.CreateBuilding(buildingType);
-                }).AddTo(_compositeDisposable);
+                }).AddTo(CompositeDisposable);
             }
         }
     }
