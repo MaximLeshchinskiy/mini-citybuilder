@@ -4,10 +4,10 @@ namespace Domain
 {
     public class BuildingType
     {
-        public readonly string Name;
         public readonly List<BuildingLevel> Levels;
+        public readonly string Name;
 
-        public BuildingType( string name,List<BuildingLevel> levels)
+        public BuildingType(string name, List<BuildingLevel> levels)
         {
             Levels = levels;
             Name = name;

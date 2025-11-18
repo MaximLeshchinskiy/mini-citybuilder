@@ -4,14 +4,14 @@ namespace Domain
 {
     public class GameState //todo interfaces 
     {
-        public int Gold;
-        public CityGrid CityGrid;
         public List<(BuildingType, int)> BuildingsAvailable;
-        
+        public CityGrid CityGrid;
+        public int Gold;
+
 
         public void ProcessEconomyTick()
         {
-            this.Gold += this.CityGrid.GetTickIncome();
+            Gold += CityGrid.GetTickIncome();
         }
     }
 }

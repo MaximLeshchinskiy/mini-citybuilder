@@ -1,5 +1,4 @@
 ﻿using Cysharp.Threading.Tasks;
-using Presentation.UI.Lib;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,12 +8,11 @@ namespace Presentation.UI.Lib
     {
         [SerializeField] private UIDocument uiDocument;
         protected VisualElement DocumentRoot { get; private set; }
+
         public async UniTask Init()
         {
             while (!destroyCancellationToken.IsCancellationRequested && uiDocument.rootVisualElement == null)
-            {
                 await UniTask.Yield();
-            }
             DocumentRoot = uiDocument.rootVisualElement;
             AfterInit();
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using Presentation.UI.Lib;
+﻿using Presentation.UI.Lib;
 using R3;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,14 +10,8 @@ namespace Presentation.UI.BuildMenu
     public class BuildMenuView : AView, IBuildMenuView
     {
         [SerializeField] private VisualTreeAsset buttonTemplate;
-        
-        private VisualElement _container;
-        
 
-        protected override void AfterInit()
-        {
-            _container = DocumentRoot.Q<VisualElement>("build-menu-container");
-        }
+        private VisualElement _container;
 
         public Subject<uint> AddButton(string buildingTypeName, int level)
         {
@@ -26,13 +19,19 @@ namespace Presentation.UI.BuildMenu
 
             var btn = instance.Q<Button>("BuildingButton");
 
-            btn.text = $"{buildingTypeName} L{level+1}";
+            btn.text = $"{buildingTypeName} L{level + 1}";
             var subject = new Subject<uint>();
 
             btn.clicked += () => { subject.OnNext(0); };
             _container.Add(instance);
 
             return subject;
+        }
+
+
+        protected override void AfterInit()
+        {
+            _container = DocumentRoot.Q<VisualElement>("build-menu-container");
         }
     }
 }

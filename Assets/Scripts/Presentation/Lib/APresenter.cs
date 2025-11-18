@@ -10,16 +10,21 @@ namespace Presentation.UI.Lib
     public abstract class APresenter<T> : IInitializable, IDisposable where T : IView
     {
         [Inject] private T _view;
-        private readonly CompositeDisposable _compositeDisposable = new();
-        
+
         protected T View => _view;
-        protected CompositeDisposable CompositeDisposable => _compositeDisposable;
+        protected CompositeDisposable CompositeDisposable { get; } = new();
+
+        public void Dispose()
+        {
+            BeforeDispose();
+            CompositeDisposable.Dispose();
+        }
 
         public void Initialize()
         {
             InitializeView().Forget(Debug.LogError);
         }
-        
+
         private async UniTask InitializeView()
         {
             await _view.Init();
@@ -31,21 +36,13 @@ namespace Presentation.UI.Lib
         {
             return UniTask.CompletedTask;
         }
-        
+
         protected virtual void AfterInitialized()
         {
-            
         }
 
         protected virtual void BeforeDispose()
         {
-            
-        }   
-        
-        public void Dispose()
-        {
-            BeforeDispose();
-            _compositeDisposable.Dispose();
         }
     }
 }

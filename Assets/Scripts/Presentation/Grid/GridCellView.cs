@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Presentation.Grid
 {
@@ -11,7 +10,7 @@ namespace Presentation.Grid
         [SerializeField] private Color normalColor = Color.white;
         [SerializeField] private Color selectedColor = Color.yellow;
         [SerializeField] private Renderer meshRenderer;
-        
+
         public void SetNormalMode()
         {
             meshRenderer.material.SetColor(BaseColor, normalColor);

@@ -15,7 +15,7 @@ namespace Application
         [Inject] private GameState _gameState;
 
         public ReactiveProperty<int> Gold { get; } = new();
-        
+
         public void Initialize()
         {
             Gold.Value = _gameState.Gold;

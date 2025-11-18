@@ -1,9 +1,4 @@
-﻿using Application;
-using Domain;
-using MessagePipe;
-using R3;
-using UnityEngine;
-using VContainer;
+﻿using UnityEngine;
 
 namespace Presentation
 {
@@ -17,7 +12,7 @@ namespace Presentation
         {
             buildingObject.transform.position += Vector3.up * beingMovedOffset;
         }
-        
+
         public void SetNormalMode()
         {
             buildingObject.transform.position -= Vector3.up * beingMovedOffset;
@@ -33,5 +28,4 @@ namespace Presentation
             Debug.Log("Poof!!!");
         }
     }
-    
 }

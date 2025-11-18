@@ -1,5 +1,4 @@
-﻿
-using Application;
+﻿using Application;
 using Domain;
 using MessagePipe;
 using Presentation.Grid;
@@ -11,15 +10,15 @@ namespace Presentation.UI.BuildingEditMenu
 {
     public class BuildingMenuPresenter : APresenter<IBuildingEditMenuView>
     {
-        [Inject] ISubscriber<GridPosSelected> _gridPosSelected;
-        [Inject] IEditBuildingUseCase _editBuildingUseCase;
-        [Inject] IPlaceBuildingUseCase _placeBuildingUseCase;
-
-        private GridPos _gridPosHandled;
         private readonly ReactiveProperty<int> _buildingLevel = new();
         private readonly ReactiveProperty<string> _buildingName = new();
         private readonly ReactiveProperty<bool> _canUpgrade = new();
-        
+        [Inject] private IEditBuildingUseCase _editBuildingUseCase;
+
+        private GridPos _gridPosHandled;
+        [Inject] private ISubscriber<GridPosSelected> _gridPosSelected;
+        [Inject] private IPlaceBuildingUseCase _placeBuildingUseCase;
+
         protected override void AfterInitialized()
         {
             View.Hide();
@@ -43,9 +42,8 @@ namespace Presentation.UI.BuildingEditMenu
             View.BindBuildingLevel(_buildingLevel);
             View.BindBuildingName(_buildingName);
             View.BindUpgradeButton(_canUpgrade);
-
         }
-        
+
         private void OnGridPosSelected(GridPosSelected gridPosSelected)
         {
             if (_editBuildingUseCase.GetBuildingAtPos(gridPosSelected.GridPos) == null)

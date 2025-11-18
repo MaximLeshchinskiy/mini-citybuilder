@@ -15,7 +15,7 @@ namespace Application
         {
             return _gameState.CityGrid.GetBuildingInCell(pos);
         }
-        
+
         public void DestroyBuildingAtPosition(GridPos gridPosHandled)
         {
             var building = _gameState.CityGrid.GetBuildingInCell(gridPosHandled);

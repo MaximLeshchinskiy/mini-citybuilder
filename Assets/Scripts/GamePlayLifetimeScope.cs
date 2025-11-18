@@ -19,26 +19,26 @@ namespace Tmp
 {
     public class GamePlayLifetimeScope : LifetimeScope
     {
-        [Header("configs")]
-        [SerializeField] private BuildingsConfigProvider buildingsConfigProvider;
+        [Header("configs")] [SerializeField] private BuildingsConfigProvider buildingsConfigProvider;
+
         [SerializeField] private GameplaySettings gameplaySettings;
-        
-        [Header("Views")]
-        [SerializeField] private BuildMenuView buildMenuView;
+
+        [Header("Views")] [SerializeField] private BuildMenuView buildMenuView;
+
         [SerializeField] private GridView gridView;
         [SerializeField] private BuildingEditMenuView buildingEditMenuView;
         [SerializeField] private GoldCounterView goldCounterView;
-         
+
         protected override void Configure(IContainerBuilder builder)
         {
             BindConfigs(builder);
 
             var gameState = MocTestData();
             builder.RegisterInstance(gameState);
-            
+
             builder.RegisterInstance<IBuildingViewPrefabResolver>(buildingsConfigProvider);
             builder.Register<IBuildingViewFactory, BuildingViewFactory>(Lifetime.Singleton);
-            
+
             BindUseCases(builder);
             BindStaticViews(builder);
             BindInfrastructure(builder);
@@ -56,13 +56,13 @@ namespace Tmp
 
         private GameState MocTestData()
         {
-            var gameState = new GameState()
+            var gameState = new GameState
             {
-                BuildingsAvailable = new List<(BuildingType, int)>()
+                BuildingsAvailable = new List<(BuildingType, int)>
                 {
                     (buildingsConfigProvider.BuildingTypes[0], 0),
                     (buildingsConfigProvider.BuildingTypes[1], 0),
-                    (buildingsConfigProvider.BuildingTypes[2], 0),
+                    (buildingsConfigProvider.BuildingTypes[2], 0)
                 },
                 CityGrid = new CityGrid(5, 5)
             };
@@ -93,7 +93,7 @@ namespace Tmp
         private static void BindUseCases(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<PlaceBuildingUseCase>().As<IPlaceBuildingUseCase>();
-            builder.Register<IInstantiateGridUseCase,InstantiateGridUseCase>(Lifetime.Singleton);
+            builder.Register<IInstantiateGridUseCase, InstantiateGridUseCase>(Lifetime.Singleton);
             builder.RegisterEntryPoint<EditBuildingUseCase>().As<IEditBuildingUseCase>();
             builder.RegisterEntryPoint<EconomyService>().As<IEconomyService>();
         }

@@ -6,7 +6,7 @@ namespace Domain
     {
         public readonly int X;
         public readonly int Y;
-        
+
         public GridPos(int x, int y)
         {
             X = x;
@@ -27,7 +27,7 @@ namespace Domain
         {
             return HashCode.Combine(X, Y);
         }
-        
+
         public override string ToString()
         {
             return $"({X}, {Y})";

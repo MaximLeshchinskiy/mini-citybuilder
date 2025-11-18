@@ -7,23 +7,11 @@ namespace Presentation.UI.BuildingEditMenu
 {
     public class BuildingEditMenuView : AView, IBuildingEditMenuView
     {
+        private VisualElement _container;
+        private StyleEnum<DisplayStyle> _initialDisplayStyle;
         public Subject<Unit> MoveButtonClicked { get; } = new();
         public Subject<Unit> UpgradeButtonClicked { get; } = new();
         public Subject<Unit> DestroyButtonClicked { get; } = new();
-    
-
-        private VisualElement _container;
-        private StyleEnum<DisplayStyle> _initialDisplayStyle;
-
-
-        protected override void AfterInit()
-        {
-            _container = DocumentRoot.Q<VisualElement>("building-edit-menu");
-            _initialDisplayStyle = _container.style.display;
-            _container.Q<Button>("move-button").clicked += () => MoveButtonClicked.OnNext(Unit.Default);
-            _container.Q<Button>("upgrade-button").clicked += () => UpgradeButtonClicked.OnNext(Unit.Default);
-            _container.Q<Button>("destroy-button").clicked += () => DestroyButtonClicked.OnNext(Unit.Default);
-        }
 
         public void Hide()
         {
@@ -33,11 +21,6 @@ namespace Presentation.UI.BuildingEditMenu
         public void Show()
         {
             _container.style.display = _initialDisplayStyle;
-        }
-
-        public void SetBuildingName(string buildingName)
-        {
-            _container.Q<Label>("building-name").text = buildingName;
         }
 
         public void BindBuildingLevel(ReactiveProperty<int> level)
@@ -56,6 +39,21 @@ namespace Presentation.UI.BuildingEditMenu
         {
             canUpgrade.Subscribe(c => { _container.Q<Button>("upgrade-button").SetEnabled(c); })
                 .AddTo(destroyCancellationToken);
+        }
+
+
+        protected override void AfterInit()
+        {
+            _container = DocumentRoot.Q<VisualElement>("building-edit-menu");
+            _initialDisplayStyle = _container.style.display;
+            _container.Q<Button>("move-button").clicked += () => MoveButtonClicked.OnNext(Unit.Default);
+            _container.Q<Button>("upgrade-button").clicked += () => UpgradeButtonClicked.OnNext(Unit.Default);
+            _container.Q<Button>("destroy-button").clicked += () => DestroyButtonClicked.OnNext(Unit.Default);
+        }
+
+        public void SetBuildingName(string buildingName)
+        {
+            _container.Q<Label>("building-name").text = buildingName;
         }
     }
 }
